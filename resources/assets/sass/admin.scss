@@ -1,0 +1,98 @@
+@import "node_modules/font-awesome/scss/font-awesome";
+@import "node_modules/sweetalert2/src/sweetalert2";
+@import "node_modules/select2/dist/css/select2";
+@import "components/select2/theme";
+
+input.no-error,
+select.no-error {
+	border-color: #eeeeee !important;
+}
+
+.inbox-widget {
+	min-height: auto !important;
+	max-height: auto !important;
+}
+
+.b-r-0 {
+	border-radius: 0 !important;
+}
+
+.text-danger {
+	color: #ef5350 !important;
+}
+
+.rcon-console {
+	.console-body {
+		width: 100%;
+		min-height: 200px;
+		max-height: 300px;
+		background: #f3f3f3;
+		overflow: auto;
+		padding: 10px;
+		border: 0;
+		margin: 0;
+		border-radius: 0;
+	}
+
+	.input-group-addon {
+		border: 0;
+		border-radius: 0;
+		background: #fff;
+	}
+
+	.btn {
+		border: 0;
+		border-radius: 0;
+		height: 34px;
+	}
+
+	.form-control {
+		border: 0;
+
+		&:focus {
+			border: 0;
+		}
+	}
+}
+
+.color-default {
+	color: #737373 !important;
+}
+
+.link {
+	cursor: pointer;
+}
+
+.inbox-widget .inbox-item {
+	border-bottom: 1px solid rgba(0, 0, 0, .03);
+
+	&:first-child {
+		padding-top: 0;
+
+		.inbox-item-date {
+			top: 2px !important;
+		}
+	}
+
+	&:last-child {
+		border-bottom: 0;
+		padding-bottom: 0;
+	}
+
+	.inbox-item-date {
+		top: 12px !important;
+		margin-top: 0 !important;
+	}
+}
+
+.view-site {
+	color: rgba(255, 255, 255, .7) !important;
+	font-size: 13px;
+	margin-top: 23px;
+	margin-left: 10px;
+	float: left;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
