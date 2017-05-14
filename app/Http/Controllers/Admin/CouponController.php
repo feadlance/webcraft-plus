@@ -20,7 +20,7 @@ class CouponController extends Controller
 		$validator = Validator::make($request->all(), [
 			'code' => 'required|max:50|unique:payment_coupons',
 			'piece' => 'required|numeric',
-			'credit' => 'required|money',
+			'credit' => 'required|money'
 		])->setAttributeNames([
 			'code' => __('Kupon Kodu'),
 			'piece' => __('Adet'),

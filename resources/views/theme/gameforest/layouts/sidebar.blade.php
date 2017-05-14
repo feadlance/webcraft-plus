@@ -86,7 +86,7 @@
             <p>{{ __('Kimse kimseyi öldürmemiş.') }}</p>
         @endif
     </div>
-    @if ( settings('lebby.ads_field') && config('lebby.ads') === null )
+    @if ( settings('lebby.ads_field') )
         <div class="widget widget-list">
             <div class="title">{{ __('Reklam') }}</div>
             {!! settings('lebby.ads_field') !!}

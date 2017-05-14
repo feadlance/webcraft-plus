@@ -171,7 +171,7 @@
 							@endif
 	                	@endforeach
 	                </ul>
-	                &copy; {{ date('Y') }} {{ settings('app.name') }}. {{ __('Hakları mahfuzdur.') }}
+	                &copy; {{ date('Y') }} {{ settings('app.name') }}. {{ __('Hakları saklıdır.') }}
 	            </div>
 	        </div>
 	    </footer>
