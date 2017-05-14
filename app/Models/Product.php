@@ -11,6 +11,7 @@ class Product extends Model
 		'name',
 		'description',
 		'commands',
+		'command_type',
 		'prefix',
 		'icon',
 		'price',
@@ -20,13 +21,14 @@ class Product extends Model
 
 	protected $casts = [
 		'day' => 'integer',
+		'command_type' => 'boolean',
 		'price' => 'double',
 		'active' => 'boolean'
 	];
 
-	public function server()
+	public function servers()
 	{
-		return $this->belongsTo('App\Models\Server');
+		return $this->belongsToMany('App\Models\Server');
 	}
 
 	public function sales()

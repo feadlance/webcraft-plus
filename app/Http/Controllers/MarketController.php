@@ -31,7 +31,7 @@ class MarketController extends Controller
 	public function list()
 	{
 		$validator = Validator::make(request()->all(), [
-			'server' => 'exists:servers,id',
+			'server' => 'required|exists:servers,id',
 			'type' => 'nullable|in:vip,item'
 		]);
 
@@ -39,13 +39,9 @@ class MarketController extends Controller
 			return response_json(__('Bir hata oluştu, lütfen sayfayı yenileyip tekrar deneyin.'));
 		}
 
-		$products = Product::whereActive(true);
+		$server = Server::find(request('server'));
 
-		if ( request('server') !== null ) {
-			$products = $products->whereHas('server', function ($query) {
-				$query->where('servers.id', request('server'));
-			});
-		}
+		$products = $server->products()->whereActive(true);
 
 		if ( request('type') !== null ) {
 			$products = $products->where('type', request('type'));
@@ -66,7 +62,7 @@ class MarketController extends Controller
 
 		foreach ($products as $key => $product) {
 			$viewProducts[$key]['searchQuery'] = $product->name;
-			$viewProducts[$key]['view'] = View::make('components.product', compact('product'))->render();
+			$viewProducts[$key]['view'] = View::make('components.product', compact('product', 'server'))->render();
 		}
 
 		$pagination = $products->links('components.pagination-vue')->toHtml();
@@ -77,7 +73,7 @@ class MarketController extends Controller
 		));
 	}
 
-	public function postDetail($id)
+	public function postDetail($id, $serverId)
 	{
 		$product = Product::whereActive(true)->find($id);
 
@@ -99,7 +95,7 @@ class MarketController extends Controller
 		return response_json('OK', true, $product);
 	}
 
-	public function postBuy($id)
+	public function postBuy($id, $serverId)
 	{
 		$user = auth()->user();
 
@@ -113,24 +109,36 @@ class MarketController extends Controller
 			return response_json(__('Ürün bulunamadı.'));
 		}
 
+		$server = Server::find($serverId);
+
+		if ( $server === null ) {
+			return response_json(__('Sunucu bulunamadı.'));
+		}
+
 		if ( $user->money < $product->price ) {
 			return response_json(__('Bu ürünü alabilmek için daha fazla paraya ihtiyacınız var.'));
 		}
 
-		if ( $user->is_online() !== true || ($user->server() && $user->server()->id !== $product->server->id) ) {
-			return response_json(__('Bu ürünü satın alabilmek için :server sunucusunda çevrimiçi olmalısınız.', ['server' => $product->server->name]));
-		}
-
-		$givenCommands = explode("\n", $product->givenCommands($user->username));
-
-		$rcon = $product->server->connectRcon();
+		$rcon = $server->connectRcon();
 
 		if ( $rcon->authorized !== true ) {
 			return response_json(__('Sunucuyla bağlantı sağlanamadı, lütfen yöneticiye bildirin.'));
 		}
 
-		foreach ($givenCommands as $key => $value) {
-			$product->server->sendCommand(str_replace("\r", null, $value));
+		if ( $user->is_online() !== true || ($user->server() && $user->server()->id !== $server->id) ) {
+			return response_json(__('Bu ürünü satın alabilmek için :server sunucusunda çevrimiçi olmalısınız.', ['server' => $server->name]));
+		}
+
+		$givenCommands = explode("\n", $product->givenCommands($user->username));
+
+		if ( $product->command_type === true ) {
+			foreach ($givenCommands as $key => $value) {
+				$product->servers->each->sendCommand(str_replace("\r", null, $value));
+			}
+		} else {
+			foreach ($givenCommands as $key => $value) {
+				$server->sendCommand(str_replace("\r", null, $value));
+			}
 		}
 
 		$sale = $product->sales()->create([
@@ -139,7 +147,7 @@ class MarketController extends Controller
 		]);
 
 		$user->sales()->save($sale);
-		$product->server->sales()->save($sale);
+		$server->sales()->save($sale);
 
 		if ( $product->type === 'vip' ) {
 			$sale->users()->save($user);

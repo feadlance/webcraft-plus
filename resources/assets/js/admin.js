@@ -12,6 +12,10 @@ window.swal = require('sweetalert2');
 window.select2 = require('select2');
 
 $(function () {
+	$('.select2').select2({
+		width: '100%'
+	});
+
 	$('.select2-image').select2({
 		width: '100%',
 		templateResult: sl2AddIcon,

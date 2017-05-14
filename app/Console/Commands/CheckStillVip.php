@@ -57,14 +57,20 @@ class CheckStillVip extends Command
                 continue;
             }
 
-            if ( $sale->user->server()->id !== $sale->server->id ) {
+            if ( in_array($sale->user->server()->id, $sale->product->servers()->pluck('id')->toArray()) !== true ) {
                 continue;
             }
 
             $receivedCommands = explode("\n", $sale->product->receivedCommands($sale->user->username));
 
-            foreach ($receivedCommands as $key => $value) {
-                $sale->server->sendCommand(str_replace("\r", null, $value));
+            if ( $sale->product->command_type === true ) {
+                foreach ($receivedCommands as $key => $value) {
+                    $sale->product->servers->each->sendCommand(str_replace("\r", null, $value));
+                }
+            } else {
+                foreach ($receivedCommands as $key => $value) {
+                    $sale->server->sendCommand(str_replace("\r", null, $value));
+                }
             }
 
             $sale->execute = true;

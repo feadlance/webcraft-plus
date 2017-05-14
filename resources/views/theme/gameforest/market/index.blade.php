@@ -53,14 +53,19 @@
 		</section>
 		<section class="bg-grey-50">
 			<div class="container">
-				<div v-if="filteredProducts.length > 0">
-					<div class="row">
-						<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" v-for="productView in filteredProducts" v-html="productView.view"></div>
+				<div v-if="selectedServer">
+					<div v-if="filteredProducts.length > 0">
+						<div class="row">
+							<div class="col-lg-4 col-md-4 col-sm-6 col-xs-12" v-for="productView in filteredProducts" v-html="productView.view"></div>
+						</div>
+						<div v-if="pagination" v-html="pagination"></div>
 					</div>
-					<div v-if="pagination" v-html="pagination"></div>
+					<div v-else>
+						<h4>{{ __('Bu sayfada hiç ürün yok.') }}</h4>
+					</div>
 				</div>
 				<div v-else>
-					<h4>{{ __('Bu sayfada hiç ürün yok.') }}</h4>
+					<h4>{{ __('Lütfen yukarıdan bir sunucu seçin.') }}</h4>
 				</div>
 			</div>
 		</section>
@@ -127,6 +132,7 @@
 				},
 				product: {
 					id: null,
+					server_id: null,
 					name: null,
 					description: null,
 					imageUrl: null,
@@ -137,11 +143,12 @@
 				},
 				products: [],
 				pagination: null,
-				loadingDetail: true
+				loadingDetail: true,
+				selectedServer: false
 			},
 
 			mounted() {
-				this.fetchProducts();
+				//
 			},
 
 			computed: {
@@ -176,10 +183,13 @@
 					});
 				},
 
-				loadProductDetail(id) {
+				loadProductDetail(id, server) {
 					this.loadingDetail = true;
 
-					this.$http.post('{{ route('market.detail', ':id') }}'.replace(':id', id)).then((response) => {
+					let url = '{{ route('market.detail', [':id', ':server']) }}'
+						.replace(':id', id).replace(':server', server);
+
+					this.$http.post(url).then((response) => {
 						if ( response.body.status == false ) {
 							swalError(response.body.status_message);
 							$('#buy').modal('hide');
@@ -188,6 +198,7 @@
 						}
 
 						this.product = response.body.data;
+						this.product.server_id = server;
 						this.loadingDetail = false;
 					});
 				},
@@ -195,7 +206,12 @@
 				buyProduct() {
 					document.getElementById('buyButton').disabled = true;
 
-					this.$http.post('{{ route('market.buy', ':id') }}'.replace(':id', this.product.id)).then((response) => {
+					let url = '{{ route('market.buy', [':id', ':server']) }}'
+						.replace(':id', this.product.id).replace(':server', this.product.server_id);
+
+					console.log(url);
+
+					this.$http.post(url).then((response) => {
 						document.getElementById('buyButton').disabled = false;
 						
 						if ( response.body.status === false ) {
@@ -211,6 +227,11 @@
 
 				setFilter(key, value) {
 					this.filters[key] = value;
+
+					if ( key == 'server' ) {
+						this.selectedServer = true;
+					}
+					
 					this.fetchProducts();
 				}
 			}
@@ -232,9 +253,10 @@
 			});
 
 			$('#buy').on('shown.bs.modal', function (e) {
-				var id = $(e.relatedTarget).closest('.card').data('product-id');
+				var id = Product.id ? Product.id : $(e.relatedTarget).closest('.card').data('product-id');
+				var server = Product.server_id ? Product.server_id : $(e.relatedTarget).closest('.card').data('server-id');
 
-	        	Product.loadProductDetail(Product.id ? Product.id : id);
+	        	Product.loadProductDetail(id, server);
 	        }).on('hidden.bs.modal', function () {
 	        	Product.loadingDetail = true;
 	        	Product.id = null;

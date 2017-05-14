@@ -54,7 +54,7 @@ class Server extends Model
 
 	public function products()
 	{
-		return $this->hasMany('App\Models\Product');
+		return $this->belongsToMany('App\Models\Product');
 	}
 
 	public function posts()

@@ -11,26 +11,46 @@
 			<div class="panel-body">
 				<form id="form" action="{{ route('admin.product.add') }}" method="post" class="form-horizontal" role="form">
 					{{ csrf_field() }}
+
+					@if ( $product !== null )
+						<input type="hidden" name="product" value="{{ $product->id }}">
+					@endif
 					
-					<div class="form-group{{ $errors->has('server_id') ? ' has-error' : '' }}">
-						<label for="server_id" class="col-sm-2 control-label">{{ __('Sunucu') }}</label>
+					<div class="form-group{{ $errors->has('server_id.*') ? ' has-error' : '' }}">
+						<label for="server_id" class="col-sm-2 control-label">{{ __('Sunucular') }}</label>
 						<div class="col-sm-10">
-							<select name="server_id" id="server_id" class="form-control">
-								@foreach ( $servers as $server )
-									<option value="{{ $server->id }}">{{ $server->name }}</option>
+							<select name="server_id[]" id="server_id" class="form-control select2" multiple>
+								@foreach ( $servers as $key => $server )
+									<option value="{{ $server->id }}"{{ in_array($server->id, $form->server_id) ? ' selected' : '' }}>{{ $server->name }}</option>
 								@endforeach
 							</select>
-							@if ( $errors->has('server_id') )
-								<span class="help-block">{{ $errors->first('server_id') }}</span>
+							@if ( $errors->has('server_id.*') )
+								<span class="help-block">{{ $errors->first('server_id.*') }}</span>
 							@endif
+						</div>
+					</div>
+					<div class="form-group{{ $errors->has('command_type') ? ' has-error' : '' }}">
+						<div class="radio radio-primary">
+							<div class="col-sm-10 col-sm-offset-2 m-b-5">
+								<input type="radio" name="command_type" id="command_type_1" value="single"{{ $form->command_type !== 'multiple' ? ' checked' : '' }}>
+								<label title="Üye, bir ürün satın aldığında komut sadece seçtiği sunucuya gönderilir." for="command_type_1">
+									{{ __('Komutları sadece satın alınan sunucuya gönder.') }}
+								</label>
+							</div>
+							<div class="col-sm-10 col-sm-offset-2">
+								<input type="radio" name="command_type" id="command_type_2" value="multiple"{{ $form->command_type === 'multiple' ? ' checked' : '' }}>
+								<label title="Üye, bir ürün satın aldığında komut yukarıda seçilen tüm sunuculara gönderilir." for="command_type_2">
+									{{ __('Komutları, seçilen tüm sunuculara gönder.') }}
+								</label>
+							</div>
 						</div>
 					</div>
 					<div class="form-group{{ $errors->has('type') ? ' has-error' : '' }}">
 						<label for="type" class="col-sm-2 control-label">{{ __('Kategori') }}</label>
 						<div class="col-sm-10">
 							<select v-model="type" name="type" id="type" class="form-control">
-								<option value="vip">VIP</option>
-								<option value="item">Eşya</option>
+								<option value="vip"{{ $form->type === 'vip' ? ' selected' : '' }}>VIP</option>
+								<option value="item"{{ $form->type === 'item' ? ' selected' : '' }}>Eşya</option>
 							</select>
 							@if ( $errors->has('type') )
 								<span class="help-block">{{ $errors->first('type') }}</span>
@@ -40,7 +60,7 @@
 					<div v-if="show_prefix" class="form-group{{ $errors->has('prefix') ? ' has-error' : '' }}">
 						<label for="prefix" class="col-sm-2 control-label">{{ __('VIP Prefix') }}</label>
 						<div class="col-sm-10">
-							<input onkeyup="color()" type="text" id="prefix" name="prefix" value="{{ old('prefix') }}" class="form-control">
+							<input onkeyup="color()" type="text" id="prefix" name="prefix" value="{{ $form->prefix }}" class="form-control">
 							@if ( $errors->has('prefix') )
 								<span class="help-block">{{ $errors->first('prefix') }}</span>
 							@else
@@ -55,7 +75,7 @@
 					<div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
 						<label for="name" class="col-sm-2 control-label">{{ __('Ürün Adı') }}</label>
 						<div class="col-sm-10">
-							<input type="text" id="name" name="name" value="{{ old('name') }}" class="form-control">
+							<input type="text" id="name" name="name" value="{{ $form->name }}" class="form-control">
 							@if ( $errors->has('name') )
 								<span class="help-block">{{ $errors->first('name') }}</span>
 							@endif
@@ -64,7 +84,7 @@
 					<div class="form-group{{ $errors->has('given_commands') ? ' has-error' : '' }}">
 						<label for="given_commands" class="col-sm-2 control-label">{{ __('Ürün Komutları') }}</label>
 						<div class="col-sm-10">
-							<textarea id="given_commands" name="given_commands" class="form-control" placeholder="{{ __('Örnek: ') }} /manuadd @p vip" rows="4">{{ old('given_commands') }}</textarea>
+							<textarea id="given_commands" name="given_commands" class="form-control" placeholder="{{ __('Örnek: ') }} /manuadd @p vip" rows="4">{{ $form->given_commands }}</textarea>
 							@if ( $errors->has('given_commands') )
 								<span class="help-block">{{ $errors->first('given_commands') }}</span>
 							@else
@@ -76,7 +96,7 @@
 						<label for="day" class="col-sm-2 control-label">{{ __('Ürün Süresi') }}</label>
 						<div class="col-sm-10">
 							<div class="input-group">
-								<input v-model="day" type="text" id="day" name="day" class="form-control">
+								<input v-model="day" type="text" id="day" name="day" value="{{ $form->day }}" class="form-control">
 								<span class="input-group-addon">{{ __('gün') }}</span>
 							</div>
 							@if ( $errors->has('day') )
@@ -89,7 +109,7 @@
 					<div v-if="received_commands" class="form-group{{ $errors->has('received_commands') ? ' has-error' : '' }}">
 						<label for="received_commands" class="col-sm-2 control-label">{{ __('Süre Sonu Komutları') }}</label>
 						<div class="col-sm-10">
-							<textarea id="received_commands" name="received_commands" class="form-control" placeholder="{{ __('Örnek: ') }} /manuadd @p default" rows="4">{{ old('received_commands') }}</textarea>
+							<textarea id="received_commands" name="received_commands" class="form-control" placeholder="{{ __('Örnek: ') }} /manuadd @p default" rows="4">{{ $form->received_commands }}</textarea>
 							@if ( $errors->has('received_commands') )
 								<span class="help-block">{{ $errors->first('received_commands') }}</span>
 							@else
@@ -102,7 +122,7 @@
 						<div class="col-sm-10">
 							<select name="icon" id="icon" class="form-control select2-image">
 								@foreach ( $icons as $key => $icon )
-									<option value="{{ $key }}" data-image="{{ asset("images/minecraft/{$key}.png") }}"{{ old('icon') == $key ? ' selected' : '' }}>{{ $icon ?: $key }}</option>
+									<option value="{{ $key }}" data-image="{{ asset("images/minecraft/{$key}.png") }}"{{ $form->icon === $key ? ' selected' : '' }}>{{ $icon ?: $key }}</option>
 								@endforeach
 							</select>
 							@if ( $errors->has('icon') )
@@ -113,7 +133,7 @@
 					<div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
 						<label for="description" class="col-sm-2 control-label">{{ __('Ürün Hakkında') }}</label>
 						<div class="col-sm-10">
-							<textarea id="description" name="description" class="form-control" rows="2">{{ old('description') }}</textarea>
+							<textarea id="description" name="description" class="form-control" rows="2">{{ $form->description }}</textarea>
 							@if ( $errors->has('description') )
 								<span class="help-block">{{ $errors->first('description') }}</span>
 							@endif
@@ -124,7 +144,7 @@
 						<div class="col-sm-10">
 							<div class="input-group">
 								<span class="input-group-addon">₺</span>
-								<input type="text" id="price" name="price" placeholder="0,00" value="{{ old('price') }}" class="form-control">
+								<input type="text" id="price" name="price" placeholder="0,00" value="{{ $form->price }}" class="form-control">
 							</div>
 							@if ( $errors->has('price') )
 								<span class="help-block">{{ $errors->first('price') }}</span>
@@ -148,8 +168,8 @@
 			el: '#form',
 
 			data: {
-				day: '{{ old('day') ?: '0' }}',
-				type: '{{ old('type') ?: 'item' }}'
+				day: '{{ $form->day ?: '0' }}',
+				type: '{{ $form->type ?: 'item' }}'
 			},
 
 			computed: {

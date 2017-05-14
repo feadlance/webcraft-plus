@@ -62,8 +62,8 @@ Route::group(['prefix' => 'market', 'as' => 'market.'], function () {
 	Route::name('index')->get('/', 'MarketController@index');
 	Route::name('list')->post('/list', 'MarketController@list');
 
-	Route::name('buy')->post('/buy/{id}', 'MarketController@postBuy');
-	Route::name('detail')->post('/detail/{id}', 'MarketController@postDetail');
+	Route::name('buy')->post('/buy/{id}/{server}', 'MarketController@postBuy');
+	Route::name('detail')->post('/detail/{id}/{server}', 'MarketController@postDetail');
 
 });
 

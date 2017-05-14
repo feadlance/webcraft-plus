@@ -14,7 +14,6 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         \App\Console\Commands\UpdateServers::class,
-        \App\Console\Commands\ServerStatSync::class,
         \App\Console\Commands\UpdateOnlinePlayers::class,
         \App\Console\Commands\SetupApplication::class,
         \App\Console\Commands\CheckStillVip::class,

@@ -17,7 +17,6 @@ class RunCommandsProvider extends ServiceProvider
         return [
             \App\Console\Commands\FetchSettings::class,
             \App\Console\Commands\UpdateServers::class,
-            \App\Console\Commands\ServerStatSync::class,
             \App\Console\Commands\CheckStillVip::class,
         ];
     }

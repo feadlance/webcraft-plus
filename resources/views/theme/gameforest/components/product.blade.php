@@ -1,4 +1,4 @@
-<div data-product-id="{{ $product->id }}" class="card card-product">
+<div data-product-id="{{ $product->id }}" data-server-id="{{ $server->id }}" class="card card-product">
 	<div class="card-img">
 		<a class="image" data-toggle="modal" href="#buy">
 			<img src="{{ $product->toImageUrl() }}" alt="Product Image">
@@ -12,7 +12,7 @@
 			<span class="label label-success">{{ $product->price() }}</span>
 		</div>
 		<div class="category">
-			<span class="label label-{{ $product->server->onlineStatusColor() }}">{{ $product->server->name }}</span>
+			<span class="label label-{{ $server->onlineStatusColor() }}">{{ $server->name }}</span>
 		</div>
 		@if ( $saleCount = $product->sales->count() )
 			<div class="meta" data-toggle="tooltip" title="{{ __(':count kişi bu ürünü satın aldı.', ['count' => $saleCount]) }}"><i class="fa fa-cart-arrow-down"></i> <span>{{ $saleCount }}</span></div>

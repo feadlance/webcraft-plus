@@ -73,6 +73,7 @@
 										<td class="clickable">{{ $product->price() }}</td>
 										<td class="clickable">{{ $product->created_at->diffForHumans() }}</td>
 										<td>
+											<a href="{{ route('admin.product.add', ['id' => $product->id]) }}" class="btn btn-primary waves-effect waves-light">{{ __('Güncelle') }}</a>
 											<button @click="setProduct({{ $product->id }}, '0')" class="btn btn-danger set-false{{ $product->active !== true ? ' d-none' : '' }}">{{ __('Sil') }}</button>
 										</td>
 									</tr>

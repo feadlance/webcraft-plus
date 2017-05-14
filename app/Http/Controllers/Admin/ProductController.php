@@ -15,15 +15,45 @@ class ProductController extends Controller
 {
 	public function create()
 	{
+		$product = Product::find(request('id'));
+		
 		$icons = IconRepository::all();
 		$servers = Server::orderBy('name', 'asc')->get();
 
-		$prefix = Color::html('&3[&4&lVIP&3]');
+		$form = $product === null ? (object) [
+			'server_id' => old('server_id') ?: [],
+			'command_type' => old('command_type') ? 'multiple' : 'single',
+			'type' => old('type'),
+			'prefix' => old('prefix'),
+			'name' => old('name'),
+			'given_commands' => old('given_commands'),
+			'day' => old('day'),
+			'received_commands' => old('received_commands'),
+			'icon' => old('icon'),
+			'description' => old('description'),
+			'price' => old('price')
+		] : (object) [
+			'server_id' => old('server_id') ?: $product->servers()->pluck('id')->toArray(),
+			'command_type' => (old('command_type') ?: $product->command_type) ? 'multiple' : 'single',
+			'type' => old('type') ?: $product->type,
+			'prefix' => old('prefix') ?: $product->prefix,
+			'name' => old('name') ?: $product->name,
+			'given_commands' => old('given_commands') ?: $product->givenCommands(),
+			'day' => old('day') ?: $product->day,
+			'received_commands' => old('received_commands') ?: $product->receivedCommands(),
+			'icon' => old('icon') ?: $product->icon,
+			'description' => old('description') ?: $product->description,
+			'price' => old('price') ?: $product->price
+		];
+
+		$prefix = Color::html($form->prefix ?: '&3[&4&lVIP&3]');
 
 		return view('admin.product.add', compact(
 			'icons',
 			'prefix',
-			'servers'
+			'servers',
+			'form',
+			'product'
 		));
 	}
 
@@ -36,7 +66,10 @@ class ProductController extends Controller
 		}
 
 		$validator = Validator::make($input, [
-			'server_id' => 'required|exists:servers,id',
+			'product' => 'nullable|exists:products,id',
+			'server_id.0' => 'required|exists:servers,id',
+			'server_id.*' => 'exists:servers,id',
+			'command_type' => 'required|in:single,multiple',
 			'type' => 'required|in:vip,item',
 			'prefix' => 'max:100',
 			'name' => 'required|max:100',
@@ -47,7 +80,9 @@ class ProductController extends Controller
 			'description' => 'max:300',
 			'price' => 'required|money'
 		])->setAttributeNames([
-			'server_id' => __('Sunucu'),
+			'server_id.*' => __('Sunucu'),
+			'server_id.0' => __('Sunucu'),
+			'command_type' => __('Komut Gönderme Türü'),
 			'prefix' => __('Prefix'),
 			'type' => __('Kategori'),
 			'name' => __('Ürün Adı'),
@@ -59,23 +94,32 @@ class ProductController extends Controller
 			'price' => __('Fiyat')
 		])->validate();
 
-		$server = Server::find(request('server_id'));
-
 		$commands = request('given_commands')
 			. (request('day') > 0 ? "\n\n" . request('received_commands') : null);
 
-		$product = $server->products()->create([
+		$data = [
 			'name' => request('name'),
 			'description' => request('description'),
 			'commands' => $commands,
+			'command_type' => request('command_type') === 'multiple',
 			'prefix' => request('prefix'),
 			'day' => request('day'),
 			'icon' => request('icon'),
 			'price' => nf_to_system(request('price')),
 			'type' => request('type')
-		]);
+		];
 
-		return redirect()->route('admin.product.add')
+		$product = Product::find(request('product'));
+
+		if ( $product === null ) {
+			$product = Product::create($data);
+		} else {
+			$product->update($data);
+		}
+
+		$product->servers()->sync(request('server_id'));
+
+		return redirect()->route('admin.product.add', ['id' => $product->id])
 			->with('flash.success', __('Ürün başarıyla eklendi.'));
 	}
 

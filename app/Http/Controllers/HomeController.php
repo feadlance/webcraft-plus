@@ -12,7 +12,7 @@ use App\Models\Punishment;
 class HomeController extends Controller
 {
 	public function home()
-	{
+	{	
 		if ( settings('lebby.two_home_page') === false || auth()->check() === true ) {
 			return $this->homeAuth();
 		}
