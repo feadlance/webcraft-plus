@@ -11,4 +11,5 @@ pipelines:
         script:
           - apt-get update && apt-get install -y unzip
           - apt-get -qq install git-ftp
-          - git ftp init --user $FTP_USERNAME --passwd $FTP_PASSWORD ftp://185.22.186.25/domains/bireysel.online/public_html/
+          - git ftp push
+# - git ftp init --user $FTP_USERNAME --passwd $FTP_PASSWORD ftp://185.22.186.25/domains/bireysel.online/public_html/
