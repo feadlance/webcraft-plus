@@ -91,7 +91,7 @@ class ProductController extends Controller
 			'received_commands' => __('Süre Sonu Komutları'),
 			'icon' => __('İkon'),
 			'description' => __('Ürün Hakkında'),
-			'price' => __('Fiyat')
+			'price' => __('Fiyat'),
 		])->validate();
 
 		$commands = request('given_commands')
