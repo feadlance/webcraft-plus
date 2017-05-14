@@ -130,7 +130,7 @@ class Server extends Model
 
 		Storage::disk('logs')->put("console-{$this->id}.log", $log);
 
-		$this->updateQuery();
+		// $this->updateQuery();
 
 		return true;
 	}

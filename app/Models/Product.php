@@ -65,7 +65,7 @@ class Product extends Model
 				$commands[$key] = mb_substr($commands[$key], 1, null, 'UTF-8');
 			}
 
-			$commands[$key] = e($commands[$key]);
+			$commands[$key] = $commands[$key];
 		}
 
 		if ( $player !== false ) {
