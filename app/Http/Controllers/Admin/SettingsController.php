@@ -21,6 +21,7 @@ class SettingsController extends Controller
 			'meta_tags' => old('meta.tags') ?: settings('lebby.meta.tags'),
 			'minecraftsunucular' => old('minecraftsunucular') ?: settings('lebby.minecraftsunucular'),
 			'ads_field' => old('ads_field') ?: settings('lebby.ads_field'),
+			'footer_links' => old('footer_links') ?: settings('lebby.footer_links'),
 			'trailer' => old('trailer') ?: settings('lebby.trailer'),
 			'about' => old('about') ?: settings('lebby.about'),
 			'encryption' => old('encryption') ?: settings('lebby.password_encryption'),
@@ -42,6 +43,7 @@ class SettingsController extends Controller
 			'meta.tags' => 'max:500',
 			'minecraftsunucular' => 'max:50',
 			'ads_field' => 'max:2000',
+			'footer_links' => 'max:2000',
 			'trailer' => 'min:11|max:11|nullable',
 			'about' => 'max:500',
 			'encryption' => 'in:md5,bcrypt,sha256'
@@ -54,6 +56,7 @@ class SettingsController extends Controller
 			'meta.tags' => __('Etiketler'),
 			'minecraftsunucular' => __('Sayfa'),
 			'ads_field' => __('Reklam Kodu'),
+			'footer_links' => __('Footer Linkleri'),
 			'trailer' => __('Anasayfa Tanıtım Videosu'),
 			'about' => __('Footer Yazısı'),
 			'encryption' => __('Şifreleme Yöntemi')
@@ -76,7 +79,8 @@ class SettingsController extends Controller
 			],
 			'lebby.minecraftsunucular' => $request->minecraftsunucular,
 			'lebby.trailer' => $request->trailer,
-			'lebby.about' => $request->about
+			'lebby.about' => $request->about,
+			'lebby.footer_links' => $request->footer_links
 		];
 
 		if ( config('lebby.ads') !== null ) {

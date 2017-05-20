@@ -15,7 +15,6 @@ class RunCommandsProvider extends ServiceProvider
     protected function console_commands()
     {
         return [
-            \App\Console\Commands\FetchSettings::class,
             \App\Console\Commands\UpdateServers::class,
             \App\Console\Commands\CheckStillVip::class,
         ];
@@ -33,5 +32,9 @@ class RunCommandsProvider extends ServiceProvider
                 (new $command)->handle();
             }
         }, settings('lebby.sync_delay'), 'run_commands');
+
+        _run(function () {
+            (new \App\Console\Commands\FetchSettings)->handle();
+        }, 180, 'fetch_settings');
     }
 }

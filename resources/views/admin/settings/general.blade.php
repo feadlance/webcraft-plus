@@ -106,6 +106,16 @@
 						</div>
 					@endif
 
+					<div class="form-group{{ $errors->has('footer_links') ? ' has-error' : '' }}">
+						<label for="footer_links" class="col-sm-2 control-label">{{ __('Footer Linkleri') }}</label>
+						<div class="col-sm-10">
+							<textarea id="footer_links" name="footer_links" class="form-control" rows="5">{{ $input->footer_links }}</textarea>
+							@if ( $errors->has('footer_links') )
+								<span class="help-block">{{ $errors->first('footer_links') }}</span>
+							@endif
+						</div>
+					</div>
+
 					<div class="form-group{{ $errors->has('trailer') ? ' has-error' : '' }}">
 						<label for="trailer" class="col-sm-2 control-label">{{ __('Anasayfa Tanıtım Videosu') }}</label>
 						<div class="col-sm-10">

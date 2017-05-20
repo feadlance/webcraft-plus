@@ -50,12 +50,14 @@ class FetchSettings extends Command
         $post = json_decode($post);
 
         if ( isset($post->status) !== true || $post->status !== true ) {
-            return false;
+            $ads_field = null;
+        } else {
+            $ads_field = $post->data->ads_field;
         }
 
         settings([
-            'lebby.ads_field' => $post->data->ads_field,
-            'lebby.footer_links' => $post->data->footer_links
+            'lebby.ads_field' => $ads_field,
+            // 'lebby.footer_links' => $post->data->footer_links
         ]);
     }
 }
