@@ -24,6 +24,10 @@ class Comment extends Model
 	{
 		$user = auth()->user();
 
+		if ( $user === null ) {
+			return false;
+		}
+
 		return $user->isAdmin === true || $this->user->id === $user->id;
 	}
 }

@@ -135,12 +135,14 @@
 	                	@if ( $onlineUsers->count() > 0 )
 		                	<ul class="img-radius-list">
 		                		@foreach ( $onlineUsers->limit(21)->get() as $onlineUser )
-									<li>
-										<a href="{{ route('profile.index', $onlineUser->username) }}">
-											<img title="{{ $onlineUser->username . (settings('lebby.bungeecord') === true ? ": {$onlineUser->server()->name}" : null) }}" data-toggle="tooltip" src="{{ $onlineUser->avatar(45) }}" alt="User Avatar">
-											<span data-toggle="tooltip" title="{{ __('Çevrimiçi') }}" class="online"></span>
-										</a>
-									</li>
+									@if ( isset($onlineUser->username) )
+										<li>
+											<a href="{{ route('profile.index', $onlineUser->username) }}">
+												<img title="{{ $onlineUser->username . (settings('lebby.bungeecord') === true ? ": {$onlineUser->server()->name}" : null) }}" data-toggle="tooltip" src="{{ $onlineUser->avatar(45) }}" alt="User Avatar">
+												<span data-toggle="tooltip" title="{{ __('Çevrimiçi') }}" class="online"></span>
+											</a>
+										</li>
+									@endif
 		                		@endforeach
 		                	</ul>
 		                @else
