@@ -18,6 +18,11 @@ Route::post('/login/email', 'Auth\LoginController@postSetEmail')
 Route::name('home')->get('/', 'HomeController@home');
 
 /**
+ * Storage
+ */
+Route::name('storage')->get('/storage/{path}', 'StorageController@get')->where('path', '(.*)');
+
+/**
  * Check Ban
  */
 Route::name('check_ban')->middleware('auth')
