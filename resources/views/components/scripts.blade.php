@@ -23,6 +23,6 @@
 	function swalError(body, title = '{{ __('Hata!') }}') {
 		return swal(title, body, 'error');
 	}
-
-	{!! settings('lebby.google.analytics') !!}
 </script>
+
+{!! settings('lebby.google.analytics') !!}
