@@ -48,6 +48,7 @@ class PunishmentHistory extends Model
 		switch ( $this->punishmentType ) {
 			case 'BAN': $type = 'Ban'; break;
 			case 'TEMP_BAN': $type = 'Ban'; break;
+			case 'IP_BAN': $type = __('Ban'); break;
 			case 'WARNING': $type = 'Uyarı'; break;
 			case 'TEMP_WARNING': $type = 'Uyarı'; break;
 			case 'KICK': $type = 'Kick'; break;
