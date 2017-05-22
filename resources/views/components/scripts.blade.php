@@ -24,5 +24,5 @@
 		return swal(title, body, 'error');
 	}
 
-	{{ settings('lebby.google.analytics') }}
+	{!! settings('lebby.google.analytics') !!}
 </script>
