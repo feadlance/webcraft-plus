@@ -17,13 +17,12 @@
 @stop
 
 <?php
-	$payment->htmlForm->success_url = 'success';
-	$payment->htmlForm->error_url = 'error';
+	$payment->htmlForm->success_url = route('profile.index', $user->username);
+	$payment->htmlForm->error_url = route('home');
 	$payment->htmlForm->vip_name = 'Kredi';
 	$payment->htmlForm->report_email = settings('mail.from.address');
 	$payment->htmlForm->only_email = settings('mail.from.address');
-	#$payment->htmlForm->post_url = route('payment.listener', $method['key']);
-	$payment->htmlForm->post_url = '';
+	$payment->htmlForm->post_url = route('payment.listener', $method['key']);
 ?>
 
 @section('content')
