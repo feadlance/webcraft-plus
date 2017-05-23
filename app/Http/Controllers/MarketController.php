@@ -56,6 +56,15 @@ class MarketController extends Controller
 			$products = $products->orderBy($orderby_key, $orderby_val);
 		}
 
+		$paginate = 15;
+		$page = request('page') ?: 1;
+
+		if ( $products->paginate(15)->count() > 0 ) {
+			request()->replace(['page' => $page]);
+		} else {
+			request()->replace(['page' => 1]);
+		}
+
 		$products = $products->paginate(15);
 
 		$viewProducts = [];
