@@ -17,6 +17,7 @@ class SettingsController extends Controller
 			'server_ip' => old('server_ip') ?: settings('lebby.server.ip'),
 			'server_versions' => old('server_versions') ?: settings('lebby.server.versions'),
 			'teamspeak_ip' => old('teamspeak_ip') ?: settings('lebby.server.teamspeak'),
+			'logo' => old('logo') ?: settings('lebby.logo'),
 			'meta_description' => old('meta.description') ?: settings('lebby.meta.description'),
 			'meta_tags' => old('meta.tags') ?: settings('lebby.meta.tags'),
 			'minecraftsunucular' => old('minecraftsunucular') ?: settings('lebby.minecraftsunucular'),
@@ -39,6 +40,7 @@ class SettingsController extends Controller
 			'server_ip' => 'max:100',
 			'server_versions' => 'max:50',
 			'teamspeak_ip' => 'max:100',
+			'logo' => 'nullable|url',
 			'meta.description' => 'max:500',
 			'meta.tags' => 'max:500',
 			'minecraftsunucular' => 'max:50',
@@ -52,6 +54,7 @@ class SettingsController extends Controller
 			'server_ip' => __('Sunucu IP/Host'),
 			'server_versions' => __('Sunucu Versiyonları'),
 			'teamspeak_ip' => __('Teamspeak IP/Host'),
+			'logo' => __('Site Logosu'),
 			'meta.description' => __('Site Hakkında'),
 			'meta.tags' => __('Etiketler'),
 			'minecraftsunucular' => __('Sayfa'),
@@ -73,6 +76,7 @@ class SettingsController extends Controller
 				'versions' => $request->server_versions,
 				'teamspeak' => $request->teamspeak_ip
 			],
+			'lebby.logo' => $request->logo,
 			'lebby.meta' => [
 				'description' => $request->input('meta.description'),
 				'tags' => $request->input('meta.tags')

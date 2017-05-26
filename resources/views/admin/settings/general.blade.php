@@ -56,6 +56,17 @@
 							@endif
 						</div>
 					</div>
+					<div class="form-group{{ $errors->has('logo') ? ' has-error' : '' }}">
+						<label for="logo" class="col-sm-2 control-label">{{ __('Site Logosu') }}</label>
+						<div class="col-sm-10">
+							<input type="text" id="logo" name="logo" value="{{ $input->logo }}" class="form-control">
+							@if ( $errors->has('logo') )
+								<span class="help-block">{{ $errors->first('logo') }}</span>
+							@else
+								<span class="help-block">Logonuzun linkini girin.</span>
+							@endif
+						</div>
+					</div>
 					<div class="form-group{{ $errors->has('meta.description') ? ' has-error' : '' }}">
 						<label for="meta_description" class="col-sm-2 control-label">{{ __('Site Hakkında') }}</label>
 						<div class="col-sm-10">

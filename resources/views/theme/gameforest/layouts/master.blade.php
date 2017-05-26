@@ -44,7 +44,7 @@
 	    <header>
 	        <div class="container">
 	            <span class="bar hide"></span>
-	            <a href="{{ route('home') }}" class="logo"><img src="{{ _asset('img/logo.png') }}" alt="Logo"></a>
+	            <a href="{{ route('home') }}" class="logo"><img src="{{ settings('lebby.logo') ?: _asset('img/logo.png') }}" alt="Logo"></a>
 	            <nav>
 	                <div class="nav-control">
 	                    <ul>
