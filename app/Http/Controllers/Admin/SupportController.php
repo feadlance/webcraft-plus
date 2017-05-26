@@ -24,7 +24,7 @@ class SupportController extends Controller
 
 	public function listArchive()
 	{
-		return $this->list('closed');
+		return $this->getList('closed');
 	}
 
 	public function getReply(Request $request, $id)
