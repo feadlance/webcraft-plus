@@ -19,7 +19,7 @@ use Weblebby\GameConnect\Minecraft\Color as MinecraftColor;
 
 class ServerController extends Controller
 {
-	public function create()
+	public function getCreate()
 	{
 		return view('admin.server.add');
 	}
@@ -102,7 +102,7 @@ class ServerController extends Controller
 			->with('flash.success', __('Sunucu başarıyla eklendi!'));
 	}
 
-	public function list()
+	public function getList()
 	{
 		$servers = Server::latest()->get();
 
@@ -110,7 +110,7 @@ class ServerController extends Controller
 			->with('servers', $servers);
 	}
 
-	public function delete($id)
+	public function deleteServer($id)
 	{
 		$server = Server::find($id);
 
@@ -123,7 +123,7 @@ class ServerController extends Controller
 		return response_json(__('Sunucu başarıyla silindi.'), true, $server);
 	}
 
-	public function detail($slug)
+	public function getDetail($slug)
 	{
 		$server = Server::whereSlug($slug)->first();
 

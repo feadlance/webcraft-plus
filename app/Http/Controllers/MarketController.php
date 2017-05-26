@@ -28,7 +28,7 @@ class MarketController extends Controller
 		));
 	}
 
-	public function list()
+	public function postList()
 	{
 		$validator = Validator::make(request()->all(), [
 			'server' => 'required|exists:servers,id',

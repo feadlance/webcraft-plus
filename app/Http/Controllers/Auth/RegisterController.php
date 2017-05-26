@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Models\User;
+use App\Helpers\PasswordHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -74,28 +75,13 @@ class RegisterController extends Controller
      */
     public function create(array $data)
     {
-        $password = bcrypt($data['password']);
-
-        if ( settings('lebby.password_encryption') === 'md5' ) {
-            $password = md5($data['password']);
-        }
-
-        if ( config('lebby.password_encryption') === 'sha256' ) {
-            $random = str_random(16);
-            $password = '$SHA$' . $random . '$' . hash('sha256', hash('sha256', $data['password']) . $random);
-        }
-
-        $isAdmin = false;
-
-        if ( isset($data['isAdmin']) && $data['isAdmin'] === true ) {
-            $isAdmin = true;
-        }
+        $passwordHelper = new PasswordHelper(settings('lebby.password_encryption'));
 
         return User::create([
             'username' => $data['username'],
             'email' => $data['email'],
-            'password' => $password,
-            'isAdmin' => $isAdmin
+            'password' => $passwordHelper->hash($data['password']),
+            'isAdmin' => isset($data['isAdmin']) && $data['isAdmin'] === true
         ]);
     }
 }

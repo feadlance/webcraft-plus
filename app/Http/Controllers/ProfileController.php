@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Hash;
 use Validator;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Helpers\PasswordHelper;
 
 class ProfileController extends Controller
 {
@@ -22,7 +22,7 @@ class ProfileController extends Controller
 		));
 	}
 
-	public function products($username)
+	public function getProducts($username)
 	{
 		$user = User::whereUsername($username)->first();
 
@@ -38,7 +38,7 @@ class ProfileController extends Controller
 		));
 	}
 
-	public function settings($username)
+	public function getSettings($username)
 	{
 		$user = auth()->user();
 
@@ -55,7 +55,7 @@ class ProfileController extends Controller
 		]);
 	}
 
-	public function settingsGeneral(Request $request)
+	public function postSettingsGeneral(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
 			'name' => 'max:30',
@@ -82,7 +82,7 @@ class ProfileController extends Controller
 			->with('flash.success', __('Kişisel ayarlar başarıyla kaydedildi.'));
 	}
 
-	public function settingsSocial(Request $request)
+	public function postSettingsSocial(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
 			'social_facebook' => 'max:50',
@@ -106,7 +106,7 @@ class ProfileController extends Controller
 			->with('flash.success', __('Sosyal medya ayarları başarıyla kaydedildi.'));
 	}
 
-	public function settingsPassword(Request $request)
+	public function postSettingsPassword(Request $request)
 	{
 		$validator = Validator::make($request->all(), [
 			'password' => 'required',
@@ -117,14 +117,19 @@ class ProfileController extends Controller
 			'new_password_confirmation' => __('Yeni Şifre Tekrarı')
 		])->validate();
 
+		$encryption = settings('lebby.password_encryption');
+
+		$passwordHelper = new PasswordHelper($encryption);
+
 		$user = auth()->user();
 
-		if ( Hash::check($request->password, $user->password) !== true ) {
+		if ( $passwordHelper->check($request->password, $user->password) !== true ) {
 			return redirect()->route('profile.settings', $user->username)
 				->with('flash.error', __('Mevcut şifreniz doğru değil.'));
 		}
 
-		$user->update(['password' => bcrypt($request->new_password)]);
+		$user->password = $passwordHelper->hash($request->new_password);
+		$user->save();
 
 		return redirect()->route('profile.settings', $user->username)
 			->with('flash.success', __('Şifreniz başarıyla değiştirildi.'));

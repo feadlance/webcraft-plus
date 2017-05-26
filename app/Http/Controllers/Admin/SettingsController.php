@@ -10,7 +10,7 @@ use App\Helpers\PaymentSettings\PaymentSettingsParent as PaymentSettings;
 
 class SettingsController extends Controller
 {
-	public function general()
+	public function getGeneral()
 	{
 		$input = (object) [
 			'name' => old('name') ?: settings('app.name'),
@@ -97,7 +97,7 @@ class SettingsController extends Controller
 			->with('flash.success', __('Genel ayarlar başarıyla kaydedildi.'));
 	}
 
-	public function payment($key = null)
+	public function getPayment($key = null)
 	{
 		if ( is_null($key) === true ) {
 			return view('admin.settings.payment', ['methods' => payment_methods('config')]);
@@ -136,7 +136,7 @@ class SettingsController extends Controller
 			->with('flash.success', __(':name ödeme ayarları başarıyla kaydedildi.', ['name' => $method['name']]));
 	}
 
-	public function social()
+	public function getSocial()
 	{
 		return view('admin.settings.social', [
 			'socials' => settings('lebby.social')
@@ -164,7 +164,7 @@ class SettingsController extends Controller
 			->with('flash.success', __('Sosyal medya ayarları başarıyla kaydedildi.'));
 	}
 
-	public function mail()
+	public function getMail()
 	{
 		$input = (object) [
 			'on_register' => (boolean) old('on_register') ?: (boolean) settings('lebby.mail.on_register'),
@@ -212,7 +212,7 @@ class SettingsController extends Controller
 			->with('flash.success', __('Mail ayarları başarıyla kaydedildi.'));
 	}
 
-	public function recaptcha()
+	public function getRecaptcha()
 	{
 		$input = (object) [
 			'public_key' => old('public_key') ?: settings('recaptcha.public_key'),
@@ -243,7 +243,7 @@ class SettingsController extends Controller
 			->with('flash.success', __('ReCaptcha ayarları başarıyla kaydedildi.'));
 	}
 
-	public function other()
+	public function getOther()
 	{
 		$input = (object) [
 			'analytics' => old('analytics') ?: settings('lebby.google.analytics'),

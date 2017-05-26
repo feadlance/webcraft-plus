@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
-	public function delete($id)
+	public function deleteComment($id)
 	{
 		$comment = Comment::find($id);
 

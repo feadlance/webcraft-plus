@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers\Auth;
 
-use Hash;
 use Validator;
-use Illuminate\Http\Request;
-
 use App\Models\User;
+use Illuminate\Http\Request;
+use App\Helpers\PasswordHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -121,29 +120,9 @@ class LoginController extends Controller
 
         if ( $user !== null ) {
 
-            $encryption = settings('lebby.password_encryption');
+            $passwordHelper = new PasswordHelper(settings('lebby.password_encryption'));
 
-            if ( $encryption === 'md5' && $user->password === md5($request->password) ) {
-                $successLogin = true;  
-            }
-
-            if ( $encryption === 'bcrypt' && Hash::check($request->password, $user->password) ) {
-                $successLogin = true;
-            }
-
-            if ( $encryption === 'sha256' ) {
-                $splitPassword = explode('$', $user->password);
-
-                if ( isset($splitPassword[1]) && $splitPassword[1] === 'SHA' ) {
-                    $hash = '$SHA$' . $splitPassword[2] . '$' . hash('sha256', hash('sha256', $request->password) . $splitPassword[2]);
-
-                    if ( $user->password === $hash ) {
-                        $successLogin = true;
-                    }
-                }
-            }
-
-            if ( isset($successLogin) ) {
+            if ( $passwordHelper->check($request->password, $user->password) ) {
                 auth()->login($user);
 
                 return $this->sendLoginResponse($request);

@@ -10,7 +10,7 @@ use App\Models\Support;
 
 class SupportController extends Controller
 {
-	public function list($type = null)
+	public function getList($type = null)
 	{
 		$operator = ($type === 'closed' ? '!' : '') . '=';
 
@@ -27,7 +27,7 @@ class SupportController extends Controller
 		return $this->list('closed');
 	}
 
-	public function reply(Request $request, $id)
+	public function getReply(Request $request, $id)
 	{
 		$support = Support::find($id);
 

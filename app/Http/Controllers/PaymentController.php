@@ -12,7 +12,7 @@ use Weblebby\Payments\PaymentException;
 
 class PaymentController extends Controller
 {
-	public function method($method)
+	public function getMethod($method)
 	{
 		$methodConfig = settings("lebby.payment_methods.{$method}");
 
@@ -29,7 +29,7 @@ class PaymentController extends Controller
 		]);
 	}
 
-	public function listener($method)
+	public function postMethod($method)
 	{
 		$methodConfig = settings("lebby.payment_methods.{$method}");
 
@@ -77,7 +77,7 @@ class PaymentController extends Controller
 		}
 	}
 
-	public function post(Request $request, $method)
+	public function postListener(Request $request, $method)
 	{
 		$methodConfig = settings("lebby.payment_methods.{$method}");
 

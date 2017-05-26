@@ -8,7 +8,7 @@ use App\Models\Server;
 
 class BlogController extends Controller
 {
-	public function list($category = null)
+	public function getList($category = null)
 	{
 		$posts = Post::latest();
 
@@ -38,7 +38,7 @@ class BlogController extends Controller
 		));
 	}
 
-	public function detail($slug)
+	public function getDetail($slug)
 	{
 		$post = Post::whereSlug($slug)->first();
 

@@ -28,7 +28,7 @@ class ForumController extends Controller
 	/**
 	 * View forum threads.
 	 */
-	public function threads($forum_slug)
+	public function getThreads($forum_slug)
 	{
 		$forum = Forum::whereSlug($forum_slug)->first();
 
@@ -47,7 +47,7 @@ class ForumController extends Controller
 	/**
 	 * View add new thread page.
 	 */
-	public function add($forum_slug)
+	public function getAdd($forum_slug)
 	{
 		$forum = Forum::whereSlug($forum_slug)->first();
 
@@ -93,7 +93,7 @@ class ForumController extends Controller
 	/**
 	 * View thread.
 	 */
-	public function thread($forum_slug, $thread_slug)
+	public function getThread($forum_slug, $thread_slug)
 	{
 		$forum = Forum::whereSlug($forum_slug)->first();
 
@@ -119,7 +119,7 @@ class ForumController extends Controller
 	/**
 	 * Reply a thread.
 	 */
-	public function reply(Request $request, $forum_slug, $thread_slug)
+	public function postReply(Request $request, $forum_slug, $thread_slug)
 	{
 		$forum = Forum::whereSlug($forum_slug)->first();
 

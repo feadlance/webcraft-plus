@@ -12,7 +12,7 @@ use App\Repositories\IconRepository;
 
 class UserController extends Controller
 {
-	public function list(Request $request, $filter = null)
+	public function getList(Request $request, $filter = null)
 	{
 		$users = User::latest();
 
@@ -46,7 +46,7 @@ class UserController extends Controller
 		));
 	}
 
-	public function detail($username)
+	public function getDetail($username)
 	{
 		$user = User::where('username', $username)->first();
 
@@ -66,7 +66,7 @@ class UserController extends Controller
 		));
 	}
 
-	public function update($username)
+	public function getUpdate($username)
 	{
 		$user = User::where('username', $username)->first();
 
@@ -122,7 +122,7 @@ class UserController extends Controller
 			->with('flash.success', __('Oyuncu bilgileri başarıyla güncellendi.'));
 	}
 
-	public function action(Request $request, $username)
+	public function postAction(Request $request, $username)
 	{
 		$user = User::where('username', $username)->first();
 

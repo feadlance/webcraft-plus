@@ -13,7 +13,7 @@ use Weblebby\GameConnect\Minecraft\Color;
 
 class ProductController extends Controller
 {
-	public function create()
+	public function getCreate()
 	{
 		$product = Product::find(request('id'));
 		
@@ -123,7 +123,7 @@ class ProductController extends Controller
 			->with('flash.success', __('Ürün başarıyla eklendi.'));
 	}
 
-	public function list()
+	public function getList()
 	{
 		$server = Server::find(request('server'));
 
@@ -133,7 +133,7 @@ class ProductController extends Controller
 		return view('admin.product.list', compact('server', 'servers', 'products'));
 	}
 
-	public function set($id, $active)
+	public function postSet($id, $active)
 	{
 		$active = in_array($active, [0, 1]) ? $active : 1;
 		
@@ -148,7 +148,7 @@ class ProductController extends Controller
 		return response_json(__($active ? 'Ürün başarıyla gösterime alındı.' : 'Ürün başarıyla gösterimden kaldırıldı.'), true, $product);
 	}
 
-	public function detail($id)
+	public function getDetail($id)
 	{
 		$product = Product::find($id);
 
@@ -169,7 +169,7 @@ class ProductController extends Controller
 		));
 	}
 
-	public function color(Request $request)
+	public function postColor(Request $request)
 	{
 		return response_json('OK', true, Color::html(strip_tags($request->text)));
 	}

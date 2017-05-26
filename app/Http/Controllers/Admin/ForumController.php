@@ -11,7 +11,7 @@ use App\Models\ForumCategory;
 
 class ForumController extends Controller
 {
-	public function add($id = null)
+	public function getAdd($id = null)
 	{
 		$forum = Forum::find($id);
 		$categories = ForumCategory::orderBy('order', 'asc')->get();
@@ -61,7 +61,7 @@ class ForumController extends Controller
 			->with('flash.success', __('Forum başarıyla kaydedildi.'));
 	}
 
-	public function update(Request $request)
+	public function getUpdate(Request $request)
 	{
 		if ( Forum::find($request->id) === null ) {
 			return abort(404);
@@ -70,7 +70,7 @@ class ForumController extends Controller
 		return $this->add($request->id);
 	}
 
-	public function list()
+	public function getList()
 	{
 		$categories = ForumCategory::whereHas('forums')
 			->orderBy('order', 'asc')
@@ -81,7 +81,7 @@ class ForumController extends Controller
 		));
 	}
 
-	public function delete($id)
+	public function deleteForum($id)
 	{
 		$forum = Forum::find($id);
 

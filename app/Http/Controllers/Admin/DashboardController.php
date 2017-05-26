@@ -14,7 +14,7 @@ use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {
-	public function dashboard()
+	public function getDashboard()
 	{
 		$lastUsers = User::latest()->limit(5)->get();
 		$onlineUsers = User::online()->limit(5)->get();

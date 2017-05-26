@@ -44,18 +44,18 @@ Route::group(['prefix' => '/hit', 'as' => 'hit.'], function () {
 Route::group(['prefix' => '/profile/{username}', 'as' => 'profile.'], function () {
 
 	Route::name('index')->get('/', 'ProfileController@index');
-	Route::name('products')->get('/products', 'ProfileController@products');
+	Route::name('products')->get('/products', 'ProfileController@getProducts');
 
-	Route::name('settings')->get('/settings', 'ProfileController@settings');
+	Route::name('settings')->get('/settings', 'ProfileController@getSettings');
 
 	Route::name('settings.general')->middleware('auth')
-		->post('/settings/general', 'ProfileController@settingsGeneral');
+		->post('/settings/general', 'ProfileController@postSettingsGeneral');
 
 	Route::name('settings.social')->middleware('auth')
-		->post('/settings/social', 'ProfileController@settingsSocial');
+		->post('/settings/social', 'ProfileController@postSettingsSocial');
 
 	Route::name('settings.password')->middleware('auth')
-		->post('/settings/password', 'ProfileController@settingsPassword');
+		->post('/settings/password', 'ProfileController@postSettingsPassword');
 
 });
 
@@ -65,7 +65,7 @@ Route::group(['prefix' => '/profile/{username}', 'as' => 'profile.'], function (
 Route::group(['prefix' => 'market', 'as' => 'market.'], function () {
 
 	Route::name('index')->get('/', 'MarketController@index');
-	Route::name('list')->post('/list', 'MarketController@list');
+	Route::name('list')->post('/list', 'MarketController@postList');
 
 	Route::name('buy')->post('/buy/{id}/{server}', 'MarketController@postBuy');
 	Route::name('detail')->post('/detail/{id}/{server}', 'MarketController@postDetail');
@@ -77,8 +77,8 @@ Route::group(['prefix' => 'market', 'as' => 'market.'], function () {
  */
 Route::group(['prefix' => 'blog', 'as' => 'blog.'], function () {
 
-	Route::name('list')->get('/list/{category?}', 'BlogController@list');
-	Route::name('detail')->get('/{slug}', 'BlogController@detail');
+	Route::name('list')->get('/list/{category?}', 'BlogController@getList');
+	Route::name('detail')->get('/{slug}', 'BlogController@getDetail');
 
 	Route::name('comment')->middleware('auth')
 		->post('/{id}/comment', 'BlogController@postComment');
@@ -90,7 +90,7 @@ Route::group(['prefix' => 'blog', 'as' => 'blog.'], function () {
  */
 Route::group(['prefix' => 'comment', 'as' => 'comment.'], function () {
 
-	Route::name('delete')->delete('/{id}', 'CommentController@delete');
+	Route::name('delete')->delete('/{id}', 'CommentController@deleteComment');
 
 });
 
@@ -102,15 +102,15 @@ Route::group(['prefix' => 'forum', 'as' => 'forum.'], function () {
 	Route::name('index')->get('/', 'ForumController@index');
 
 	Route::name('add')->middleware('auth')
-		->get('/{forum}/add', 'ForumController@add');
+		->get('/{forum}/add', 'ForumController@getAdd');
 
 	Route::name('reply')->middleware('auth')
-		->post('/{forum}/{thread}/reply', 'ForumController@reply');
+		->post('/{forum}/{thread}/reply', 'ForumController@postReply');
 
 	Route::middleware('auth')->post('/{forum}/add', 'ForumController@postAdd');
 	
-	Route::name('threads')->get('/{forum}', 'ForumController@threads');
-	Route::name('thread')->get('/{forum}/{thread}', 'ForumController@thread');
+	Route::name('threads')->get('/{forum}', 'ForumController@getThreads');
+	Route::name('thread')->get('/{forum}/{thread}', 'ForumController@getThread');
 
 });
 
@@ -123,14 +123,14 @@ Route::group([
 	'middleware' => 'auth'
 ], function () {
 
-	Route::name('add')->get('/add', 'SupportController@add');
+	Route::name('add')->get('/add', 'SupportController@getAdd');
 	Route::post('/add', 'SupportController@postAdd');
 
-	Route::name('view')->get('/{id}/view', 'SupportController@view');
-	Route::name('reply')->post('/{id}/reply', 'SupportController@reply');
+	Route::name('view')->get('/{id}/view', 'SupportController@getView');
+	Route::name('reply')->post('/{id}/reply', 'SupportController@postReply');
 
-	Route::name('list')->get('/list', 'SupportController@list');
-	Route::name('close')->post('/{id}/close', 'SupportController@close');
+	Route::name('list')->get('/list', 'SupportController@getList');
+	Route::name('close')->post('/{id}/close', 'SupportController@postClose');
 
 });
 
@@ -142,9 +142,9 @@ Route::group([
 	'as' => 'payment.',
 ], function () {
 
-	Route::name('method')->get('/{method}', 'PaymentController@method')->middleware('auth');
-	Route::name('post')->post('/{method}/post', 'PaymentController@post')->middleware('auth');
-	Route::name('listener')->post('/{method}/listener', 'PaymentController@listener');
+	Route::name('method')->get('/{method}', 'PaymentController@getMethod')->middleware('auth');
+	Route::name('post')->post('/{method}/post', 'PaymentController@postMethod')->middleware('auth');
+	Route::name('listener')->post('/{method}/listener', 'PaymentController@postListener');
 
 });
 
@@ -161,19 +161,19 @@ Route::group([
 	/**
 	 * Dashboard
 	 */
-	Route::name('dashboard')->get('/', 'DashboardController@dashboard');
+	Route::name('dashboard')->get('/', 'DashboardController@getDashboard');
 
 	/**
 	 * Users
 	 */
 	Route::group(['prefix' => 'user', 'as' => 'user.'], function () {
 
-		Route::name('list')->get('/list/{filter?}', 'UserController@list');
+		Route::name('list')->get('/list/{filter?}', 'UserController@getList');
 
-		Route::name('detail')->get('/{username}/detail', 'UserController@detail');
-		Route::name('action')->post('/{username}/action', 'UserController@action');
+		Route::name('detail')->get('/{username}/detail', 'UserController@getDetail');
+		Route::name('action')->post('/{username}/action', 'UserController@postAction');
 
-		Route::name('update')->get('/{username}/update', 'UserController@update');
+		Route::name('update')->get('/{username}/update', 'UserController@getUpdate');
 		Route::post('/{username}/update', 'UserController@postUpdate');
 
 	});
@@ -183,13 +183,13 @@ Route::group([
 	 */
 	Route::group(['prefix' => 'blog', 'as' => 'blog.'], function () {
 
-		Route::name('add')->get('/add', 'BlogController@add');
+		Route::name('add')->get('/add', 'BlogController@getAdd');
 		Route::post('/add', 'BlogController@postAdd');
 
-		Route::name('list')->get('/list', 'BlogController@list');
-		Route::name('update')->get('/update', 'BlogController@update');
+		Route::name('list')->get('/list', 'BlogController@getList');
+		Route::name('update')->get('/update', 'BlogController@getUpdate');
 
-		Route::name('delete')->delete('/{id}', 'BlogController@delete');
+		Route::name('delete')->delete('/{id}', 'BlogController@deleteBlog');
 
 	});
 
@@ -198,13 +198,13 @@ Route::group([
 	 */
 	Route::group(['prefix' => 'forum', 'as' => 'forum.'], function () {
 
-		Route::name('add')->get('/add', 'ForumController@add');
+		Route::name('add')->get('/add', 'ForumController@getAdd');
 		Route::post('/add', 'ForumController@postAdd');
 
-		Route::name('update')->get('/update', 'ForumController@update');
+		Route::name('update')->get('/update', 'ForumController@getUpdate');
 
-		Route::name('list')->get('/list', 'ForumController@list');
-		Route::name('delete')->delete('/{id}', 'ForumController@delete');
+		Route::name('list')->get('/list', 'ForumController@getList');
+		Route::name('delete')->delete('/{id}', 'ForumController@deleteForum');
 
 		Route::group(['prefix' => 'category', 'as' => 'category.'], function () {
 
@@ -224,13 +224,13 @@ Route::group([
 	 */
 	Route::group(['prefix' => 'server', 'as' => 'server.'], function () {
 
-		Route::name('add')->get('/add', 'ServerController@create');
+		Route::name('add')->get('/add', 'ServerController@getCreate');
 		Route::post('/add', 'ServerController@postCreate');
 
-		Route::name('list')->get('/list', 'ServerController@list');
-		Route::name('delete')->delete('/{id}', 'ServerController@delete');
+		Route::name('list')->get('/list', 'ServerController@getList');
+		Route::name('delete')->delete('/{id}', 'ServerController@deleteServer');
 		
-		Route::name('detail')->get('/{slug}/detail', 'ServerController@detail');
+		Route::name('detail')->get('/{slug}/detail', 'ServerController@getDetail');
 
 		Route::name('console')->post('/console', 'ServerController@postConsole');
 		Route::name('console.log')->post('/{id}/console', 'ServerController@postReadConsoleLog');
@@ -242,14 +242,14 @@ Route::group([
 	 */
 	Route::group(['prefix' => 'product', 'as' => 'product.'], function () {
 
-		Route::name('add')->get('/add', 'ProductController@create');
+		Route::name('add')->get('/add', 'ProductController@getCreate');
 		Route::post('/add', 'ProductController@postCreate');
 
-		Route::name('list')->get('/list', 'ProductController@list');
-		Route::name('set')->post('/{id}/{active}', 'ProductController@set');
+		Route::name('list')->get('/list', 'ProductController@getList');
+		Route::name('set')->post('/{id}/{active}', 'ProductController@postSet');
 
-		Route::name('detail')->get('/{id}/detail', 'ProductController@detail');
-		Route::name('color')->post('/color', 'ProductController@color');
+		Route::name('detail')->get('/{id}/detail', 'ProductController@getDetail');
+		Route::name('color')->post('/color', 'ProductController@postColor');
 
 	});
 
@@ -258,10 +258,10 @@ Route::group([
 	 */
 	Route::group(['prefix' => 'support', 'as' => 'support.'], function () {
 
-		Route::name('list')->get('/list', 'SupportController@list');
+		Route::name('list')->get('/list', 'SupportController@getList');
 		Route::name('list.archive')->get('/list/archive', 'SupportController@listArchive');
 
-		Route::name('reply')->get('/{id}/reply', 'SupportController@reply');
+		Route::name('reply')->get('/{id}/reply', 'SupportController@getReply');
 		Route::post('/{id}/reply', 'SupportController@postReply');
 
 	});
@@ -271,10 +271,10 @@ Route::group([
 	 */
 	Route::group(['prefix' => 'support', 'as' => 'support.'], function () {
 
-		Route::name('list')->get('/list', 'SupportController@list');
+		Route::name('list')->get('/list', 'SupportController@getList');
 		Route::name('list.archive')->get('/list/archive', 'SupportController@listArchive');
 
-		Route::name('reply')->get('/{id}/reply', 'SupportController@reply');
+		Route::name('reply')->get('/{id}/reply', 'SupportController@getReply');
 		Route::post('/{id}/reply', 'SupportController@postReply');
 
 	});
@@ -284,12 +284,12 @@ Route::group([
 	 */
 	Route::group(['prefix' => 'coupon', 'as' => 'coupon.'], function () {
 
-		Route::name('list')->get('/list', 'CouponController@list');
-		Route::name('detail')->get('/{id}/detail', 'CouponController@detail');
+		Route::name('list')->get('/list', 'CouponController@getList');
+		Route::name('detail')->get('/{id}/detail', 'CouponController@getDetail');
 
-		Route::name('delete')->delete('/{id}', 'CouponController@delete');
+		Route::name('delete')->delete('/{id}', 'CouponController@deleteCoupon');
 
-		Route::name('add')->get('/add', 'CouponController@add');
+		Route::name('add')->get('/add', 'CouponController@getAdd');
 		Route::post('/add', 'CouponController@postAdd');
 
 	});
@@ -299,10 +299,10 @@ Route::group([
 	 */
 	Route::group(['prefix' => 'punishment', 'as' => 'punishment.'], function () {
 
-		Route::name('list')->get('/list', 'PunishmentController@list');
-		Route::name('detail')->get('/{id}/detail', 'PunishmentController@detail');
+		Route::name('list')->get('/list', 'PunishmentController@getList');
+		Route::name('detail')->get('/{id}/detail', 'PunishmentController@getDetail');
 		
-		Route::name('delete')->delete('/{id}', 'PunishmentController@delete');
+		Route::name('delete')->delete('/{id}', 'PunishmentController@deletePunishment');
 
 	});
 
@@ -311,22 +311,22 @@ Route::group([
 	 */
 	Route::group(['prefix' => 'settings', 'as' => 'settings.'], function () {
 
-		Route::name('general')->get('/general', 'SettingsController@general');
+		Route::name('general')->get('/general', 'SettingsController@getGeneral');
 		Route::post('/general', 'SettingsController@postGeneral');
 
-		Route::name('payment')->get('/payment/{method?}', 'SettingsController@payment');
+		Route::name('payment')->get('/payment/{method?}', 'SettingsController@getPayment');
 		Route::post('/payment/{method}', 'SettingsController@postPayment');
 
-		Route::name('social')->get('/social', 'SettingsController@social');
+		Route::name('social')->get('/social', 'SettingsController@getSocial');
 		Route::post('/social', 'SettingsController@postSocial');
 
-		Route::name('mail')->get('/mail', 'SettingsController@mail');
+		Route::name('mail')->get('/mail', 'SettingsController@getMail');
 		Route::post('/mail', 'SettingsController@postMail');
 
-		Route::name('other')->get('/other', 'SettingsController@other');
+		Route::name('other')->get('/other', 'SettingsController@getOther');
 		Route::post('/other', 'SettingsController@postOther');
 
-		Route::name('recaptcha')->get('/recaptcha', 'SettingsController@recaptcha');
+		Route::name('recaptcha')->get('/recaptcha', 'SettingsController@getRecaptcha');
 		Route::post('/recaptcha', 'SettingsController@postRecaptcha');
 
 	});

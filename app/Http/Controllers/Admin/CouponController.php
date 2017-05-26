@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 
 class CouponController extends Controller
 {
-	public function add()
+	public function getAdd()
 	{
 		return view('admin.coupon.add');
 	}
@@ -37,7 +37,7 @@ class CouponController extends Controller
 			->with('flash.success', __('Kupon başarıyla eklendi!'));
 	}
 
-	public function list()
+	public function getList()
 	{
 		$coupons = PaymentCoupon::latest()->get();
 
@@ -46,7 +46,7 @@ class CouponController extends Controller
 		));
 	}
 
-	public function delete($id)
+	public function deleteCoupon($id)
 	{
 		$coupon = PaymentCoupon::find($id);
 
@@ -59,7 +59,7 @@ class CouponController extends Controller
 		return response_json(__('Kupon başarıyla silindi.'), true, $coupon);
 	}
 
-	public function detail($id)
+	public function getDetail($id)
 	{
 		$coupon = PaymentCoupon::find($id);
 

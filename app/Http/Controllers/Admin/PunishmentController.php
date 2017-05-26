@@ -11,7 +11,7 @@ use App\Models\Punishment;
 
 class PunishmentController extends Controller
 {
-	public function list()
+	public function getList()
 	{
 		$punishments = Punishment::has('user')->get();
 
@@ -20,7 +20,7 @@ class PunishmentController extends Controller
 		));
 	}
 
-	public function detail($id)
+	public function getDetail($id)
 	{
 		$user = User::find($id);
 
@@ -38,7 +38,7 @@ class PunishmentController extends Controller
 		));
 	}
 
-	public function delete($id)
+	public function deletePunishment($id)
 	{
 		$punishment = Punishment::find($id);
 

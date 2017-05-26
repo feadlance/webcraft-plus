@@ -13,7 +13,7 @@ use App\Http\Controllers\Controller;
 
 class BlogController extends Controller
 {
-	public function add($id = null)
+	public function getAdd($id = null)
 	{
 		$post = Post::find($id);
 		$servers = Server::orderBy('name', 'asc')->get();
@@ -108,7 +108,7 @@ class BlogController extends Controller
 			->with('flash.success', __('Yazı başarıyla kaydedildi.'));
 	}
 
-	public function update(Request $request)
+	public function getUpdate(Request $request)
 	{
 		if ( Post::find($request->id) === null ) {
 			return abort(404);
@@ -117,7 +117,7 @@ class BlogController extends Controller
 		return $this->add($request->id);
 	}
 
-	public function list()
+	public function getList()
 	{
 		$posts = Post::latest()->get();
 
@@ -126,7 +126,7 @@ class BlogController extends Controller
 		));
 	}
 
-	public function delete($id)
+	public function deleteBlog($id)
 	{
 		$post = Post::find($id);
 

@@ -15,7 +15,7 @@ class SupportController extends Controller
 	/**
 	 * View 'support.add' file.
 	 */
-	public function add()
+	public function getAdd()
 	{
 		$servers = Server::orderBy('name', 'asc')->get();
 		$support_types = settings('lebby.support_types');
@@ -76,7 +76,7 @@ class SupportController extends Controller
 	/**
 	 * View 'support.list' file with Supports.
 	 */
-	public function list(Request $request)
+	public function getList(Request $request)
 	{
 		$supports = $request->user()->supports()
 			->latest('updated_at')->get();
@@ -89,7 +89,7 @@ class SupportController extends Controller
 	/**
 	 * View 'support.view' file.
 	 */
-	public function view(Request $request, $id)
+	public function getView(Request $request, $id)
 	{
 		$support = Support::find($id);
 
@@ -111,7 +111,7 @@ class SupportController extends Controller
 	/**
 	 * Add reply on support.
 	 */
-	public function reply(Request $request, $id)
+	public function postReply(Request $request, $id)
 	{
 		$support = Support::find($id);
 
@@ -149,7 +149,7 @@ class SupportController extends Controller
 	/**
 	 * Close support panel.
 	 */
-	public function close(Request $request, $id)
+	public function postClose(Request $request, $id)
 	{
 		$support = Support::find($id);
 
