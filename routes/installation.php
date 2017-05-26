@@ -7,4 +7,4 @@ Route::get('/', function () {
 Route::name('admin.installation')->get('/installation', 'Admin\InstallController@install');
 Route::post('/installation', 'Admin\InstallController@postInstall');
 
-Route::name('admin.continue')->post('/continue', 'Admin\InstallController@continue');
+Route::name('admin.continue')->post('/continue', 'Admin\InstallController@postContinue');

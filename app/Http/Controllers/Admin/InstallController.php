@@ -80,7 +80,7 @@ class InstallController extends Controller
         return redirect()->route('admin.installation');
 	}
 
-	public function continue(Request $request)
+	public function postContinue(Request $request)
 	{
 		if ( check_db_connection() === false ) {
 			return redirect()->back();
