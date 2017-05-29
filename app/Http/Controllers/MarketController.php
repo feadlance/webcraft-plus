@@ -134,17 +134,21 @@ class MarketController extends Controller
 			return response_json(__('Sunucuyla bağlantı sağlanamadı, lütfen yöneticiye bildirin.'));
 		}
 
-		if ( $user->is_online() !== true || ($user->server() && $user->server()->id !== $server->id) ) {
-			return response_json(__('Bu ürünü satın alabilmek için :server sunucusunda çevrimiçi olmalısınız.', ['server' => $server->name]));
-		}
-
 		$givenCommands = explode("\n", $product->givenCommands($user->username));
 
 		if ( $product->command_type === true ) {
+			if ( $user->is_online() !== true ) {
+				return response_json(__('Bu ürünü satın alabilmek için sunucuda çevrimiçi olmalısınız.'));
+			}
+
 			foreach ($givenCommands as $key => $value) {
 				$product->servers->each->sendCommand(str_replace("\r", null, $value));
 			}
 		} else {
+			if ( $user->is_online() !== true || ($user->server() && $user->server()->id !== $server->id) ) {
+				return response_json(__('Bu ürünü satın alabilmek için :server sunucusunda çevrimiçi olmalısınız.', ['server' => $server->name]));
+			}
+
 			foreach ($givenCommands as $key => $value) {
 				$server->sendCommand(str_replace("\r", null, $value));
 			}
