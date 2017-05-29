@@ -137,8 +137,10 @@ class MarketController extends Controller
 		$givenCommands = explode("\n", $product->givenCommands($user->username));
 
 		if ( $product->command_type === true ) {
-			if ( $user->is_online() !== true ) {
-				return response_json(__('Bu ürünü satın alabilmek için sunucuda çevrimiçi olmalısınız.'));
+			if ( $user->is_online() !== true || in_array($user->server()->id, $product->servers->pluck('id')->toArray()) !== true ) {
+				return response_json(__('Bu ürünü satın alabilmek için şu sunuculardan birinde çevrimiçi olmalısınız: :servers', [
+					'servers' => implode(', ', $product->servers->pluck('name')->toArray())
+				]));
 			}
 
 			foreach ($givenCommands as $key => $value) {
